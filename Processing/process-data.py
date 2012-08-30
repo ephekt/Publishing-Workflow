@@ -62,3 +62,7 @@ def listen_loop():
 
         if msg and msg == WORK_MESSAGE:
             work_loop()
+
+r = init()
+work_loop()
+listen_loop()

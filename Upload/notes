@@ -1,0 +1,5 @@
+pear channel-discover pear.nrk.io
+pear install nrk/Predis
+
+php.ini:
+file_uploads = on

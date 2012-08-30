@@ -89,26 +89,26 @@ class Upload{
       //Uhh, or something like that
     $cityData = Upload::uploadedFile("uploaded");
     if ($cityData === false){
-      echo "failure";
+      echo "Upload failed";
       return;
     }
 
     //TODO: Channel should be hash of all uploaded file paths
-    $channel = $cityData->tempName();
+    $channel = sha1($cityData->tempName());
     //TODO: Make neccessary directories?
     $uploadLocation = UPLOAD_PATH . $channel;
     $cityData->saveAs($uploadLocation);
     $redis = new Predis\Client(array(
     'scheme' => 'tcp',
-    'host'   => 'localhost',
+    'host'   => REDIS_HOST,
     'read_write_timeout' => 0));
     $job = array('path' => $uploadLocation, 'host' => $info->private_ip, 'hash' => $channel);
 
-    $redis->rpush(WORK_QUEUE, json_encode($job));
-    $redis->publish(PROCESS_CHANNEL, WORK_MESSAGE);
-    
     $pubsub = $redis->pubSub();
     $pubsub->subscribe($channel);
+
+    $redis->rpush(WORK_QUEUE, json_encode($job));
+    $redis->publish(PROCESS_CHANNEL, WORK_MESSAGE);
 
     foreach ($pubsub as $message) {
       switch ($message->kind) {
