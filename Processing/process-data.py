@@ -8,7 +8,7 @@ sys.path.insert(0, os.path.abspath('../Common'))
 import error_mail
 
 #Hostname (ip) of the redis server to communicate with
-REDIS_HOST = 'localhost'
+REDIS_HOST = '10.12.27.245'
 #Name of the channel to listen to for jobs
 PROCESS_CHANNEL = 'Process City Data'
 #Key for the work queue where jobs are stored

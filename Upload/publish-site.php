@@ -8,7 +8,7 @@ require 'Predis/Autoloader.php';
 Predis\Autoloader::register();
 
 //Hostname for Redis server
-define("REDIS_HOST", "localhost");
+define("REDIS_HOST", "10.12.27.245");
 //Channel to inform process workers of new work
 define("PROCESS_CHANNEL", "Process City Data");
 //List to push new jobs onto
