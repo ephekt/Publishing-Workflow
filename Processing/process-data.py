@@ -4,6 +4,7 @@ from redis.exceptions import ConnectionError
 import json
 from paramiko import SSHClient, SFTPClient
 import error_mail
+romm functools import partial
 
 #Hostname (ip) of the redis server to communicate with
 REDIS_HOST = '10.12.27.245'
