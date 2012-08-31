@@ -3,8 +3,6 @@ from redis._compat import b, next
 from redis.exceptions import ConnectionError
 import json
 from paramiko import SSHClient, SFTPClient
-import sys
-sys.path.insert(0, os.path.abspath('../Common'))
 import error_mail
 
 #Hostname (ip) of the redis server to communicate with
