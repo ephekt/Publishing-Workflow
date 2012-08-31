@@ -8,6 +8,9 @@ from functools import partial
 from email.mime.text import MIMEText
 import time
 
+RETRY_WAIT = 30
+RETRY_COUNT = 5
+
 def mail(message):
     me = 'loggingErrors@delphi.us'
     you = 'security@delphi.us'
@@ -35,14 +38,14 @@ def generic_error(info):
     mail(message)
 
 def redis_func(func, info):
-    for i in range(0,Const.RETRY_COUNT):
+    for i in range(0,RETRY_COUNT):
         try:
             return func()
         except (ConnectionError, AttributeError):
-            if i < Const.RETRY_COUNT-1:
-                time.sleep(Const.RETRY_WAIT)
+            if i < RETRY_COUNT-1:
+                time.sleep(RETRY_WAIT)
                 continue
-            message = "Fatal Error: Unable to connect to Redis server at " + Const.REDIS_HOST + "\n\n"
+            message = "Fatal Error: Unable to connect to Redis server at\n\n"
             message = message + "Machine info: " + json.dumps(info) + "\n"
             message = message + traceback.format_exc()
             mail(message)
