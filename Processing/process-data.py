@@ -49,6 +49,7 @@ def work_loop():
         channel = job['hash']
 
         client = SSHClient()
+        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         client.load_system_host_keys()
         client.connect(host)
         sftp_client = ssh_client.open_sftp()
