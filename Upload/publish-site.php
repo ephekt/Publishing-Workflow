@@ -102,19 +102,26 @@ class Upload{
     'scheme' => 'tcp',
     'host'   => REDIS_HOST,
     'read_write_timeout' => 0));
+
+    $r2 = new Predis\Client(array(
+    'scheme' => 'tcp',
+    'host'   => REDIS_HOST,
+    'read_write_timeout' => 0));
+
     $job = array('path' => $uploadLocation, 'host' => $info->private_ip, 'hash' => $channel);
 
-    $pubsub = $redis->pubSub();
-    $pubsub->subscribe($channel);
-
     $redis->rpush(WORK_QUEUE, json_encode($job));
-    $redis->publish(PROCESS_CHANNEL, WORK_MESSAGE);
+    $pubsub = $redis->pubSub();
+    $pubsub->subscribe($channel); 
+    $r2->publish(PROCESS_CHANNEL, WORK_MESSAGE);
+    $r2->quit();
 
     foreach ($pubsub as $message) {
+      echo $message->payload;
       switch ($message->kind) {
       case 'message':
-        $payload = json_encode($message->payload);
-        switch ($payload->status == 'quit_loop') {
+        //$payload = json_encode($message->payload);
+        switch ($payload) {
         case 'success':
           $pubsub->unsubscribe();
           unset($pubsub);
