@@ -20,6 +20,8 @@ define("UPLOAD_PATH", "/home/user/Delphi/test");
 //The location of the machine info for the joyent servers
 define("MACHINE_INFO", "/etc/delphi/data/machineinfo.json");
 
+//TODO: Timeout checking
+
 class UploadedFile{
 /*********************************************************************************//**
  *  WebApplication
@@ -120,20 +122,22 @@ class Upload{
       echo $message->payload;
       switch ($message->kind) {
       case 'message':
-        //$payload = json_encode($message->payload);
-        switch ($payload) {
-        case 'success':
-          $pubsub->unsubscribe();
-          unset($pubsub);
-          echo "success";
-          break;
-        case 'failure':
-          $pubsub->unsubscribe();
-          unset($pubsub);
-          echo "failure";
-          //Notify them that a human needs to look at it
+        $payload = json_encode($message->payload);
+        if ($payload->status) {
+          switch ($payload->status) {
+          case 'success':
+            $pubsub->unsubscribe();
+            unset($pubsub);
+            echo "success";
+            break;
+          case 'failure':
+            $pubsub->unsubscribe();
+            unset($pubsub);
+            echo "failure";
+            //Notify them that a human needs to look at it
 
-          break;
+            break;
+          }
         }
       }
     }

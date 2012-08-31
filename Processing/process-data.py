@@ -23,7 +23,16 @@ Initializes the connection to the redis and server
 '''
 def init():
     r = redis.StrictRedis(host=Const.REDIS_HOST)
-    return r
+    info = {}
+    try:
+        identfile = open(Const.MACHINE_INFO)
+        info = json.loads(identfile.readline())
+        info = info['identity']
+    except: 
+        #just leave the info as an empty object
+        pass
+
+    return r, info
 
 def work_loop():
     def pop():
@@ -63,6 +72,6 @@ def listen_loop():
         if msg and msg == WORK_MESSAGE:
             work_loop()
 
-r = init()
+r, machineinfo = init()
 work_loop()
 listen_loop()
