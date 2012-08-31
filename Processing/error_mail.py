@@ -1,7 +1,6 @@
 import smtplib
 import traceback
 import json
-import constants as Const
 from redis.exceptions import ConnectionError
 from functools import partial
 # Import the email modules we'll need
