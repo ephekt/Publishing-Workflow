@@ -7,6 +7,8 @@ import error_mail
 
 #Hostname (ip) of the redis server to communicate with
 REDIS_HOST = '10.12.27.245'
+#Location of machine info
+MACHINE_INFO = '/etc/delphi/data/machineinfo.json'
 #Name of the channel to listen to for jobs
 PROCESS_CHANNEL = 'Process City Data'
 #Key for the work queue where jobs are stored
@@ -20,10 +22,10 @@ TEMP_PATH = '.'
 Initializes the connection to the redis and server
 '''
 def init():
-    r = redis.StrictRedis(host=Const.REDIS_HOST)
+    r = redis.StrictRedis(host=REDIS_HOST)
     info = {}
     try:
-        identfile = open(Const.MACHINE_INFO)
+        identfile = open(MACHINE_INFO)
         info = json.loads(identfile.readline())
         info = info['identity']
     except: 
@@ -34,7 +36,7 @@ def init():
 
 def work_loop():
     def pop():
-        return r.lpop(Const.LOG_KEY)
+        return r.lpop(WORK_QUEUE)
     while True:
         job = error_mail.redis_func(partial(pop), machineinfo)       
         if job == None:
