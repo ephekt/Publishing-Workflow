@@ -2,6 +2,7 @@ import redis
 from redis._compat import b, next
 from redis.exceptions import ConnectionError
 import json
+import paramiko
 from paramiko import SSHClient, SFTPClient
 import error_mail
 from functools import partial
